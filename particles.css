@@ -1,0 +1,50 @@
+/* Scroll-driven process section, isolated from the existing site styles. */
+.particle-section {--particle-height:820px; --particle-travel:0px; --form-progress:0; margin-top:70px; border-top:1px solid var(--line);}
+.particle-section.has-particles {height:calc(var(--particle-height) + var(--particle-travel));}
+.particle-stage {position:sticky; top:0; height:var(--particle-height); display:flex; flex-direction:column; padding:100px 0 25px; background:var(--bg);}
+.particle-heading h2 {margin:14px 0 0; font-size:clamp(30px,4vw,58px); font-weight:500; line-height:1.04; letter-spacing:-.055em;}
+.particle-body {flex:1; min-height:0; display:grid; grid-template-columns:1.2fr 1fr; gap:5%; margin-top:35px;}
+.particle-visual {position:relative; min-width:0; min-height:0; overflow:hidden;}
+.particle-canvas {display:block; width:100%; height:100%; opacity:0;}
+.particle-fallback {position:absolute; width:85%; max-width:440px; height:80%; left:50%; top:50%; transform:translate(-50%,-50%); object-fit:contain; opacity:.6;}
+.has-particles .particle-canvas {opacity:1;}
+.has-particles .particle-fallback {display:none;}
+.particle-steps {position:relative; align-self:center; margin:0; padding:0 0 0 22px; list-style:none;}
+.particle-steps::before,.particle-steps::after {content:""; position:absolute; top:0; bottom:0; left:0; width:2px; background:var(--line);}
+.particle-steps::after {background:var(--accent); transform:scaleY(calc(.1 + var(--form-progress)*.9)); transform-origin:top;}
+.particle-step {appearance:none; width:100%; display:grid; grid-template-columns:23px 1fr; gap:12px; padding:19px 0; border:0; border-bottom:1px solid var(--line); background:transparent; color:var(--muted); font:inherit; text-align:left; cursor:pointer;}
+.particle-steps li:first-child .particle-step {padding-top:0;}
+.particle-steps li:last-child .particle-step {border-bottom:0; padding-bottom:0;}
+.particle-step-number {font:11px/1.6 monospace; padding-top:4px;}
+.particle-step strong {display:block; font-size:clamp(18px,1.7vw,25px); line-height:1.2; letter-spacing:-.035em; font-weight:500; color:var(--fg);}
+.particle-step-copy {display:block; margin-top:9px; max-width:390px; font-size:13px; line-height:1.6;}
+.particle-step.is-active .particle-step-number,.particle-step.is-active strong {color:var(--accent);}
+.particle-step:focus-visible {outline:2px solid var(--accent); outline-offset:5px;}
+.particle-caption {display:flex; justify-content:space-between; align-items:center; gap:20px; padding-top:22px; margin-top:22px; border-top:1px solid var(--line);}
+.particle-state {font:10px/1.5 monospace; color:var(--muted);}
+.particle-caption a {display:inline-flex; align-items:center; gap:12px; color:var(--accent); font-size:13px; text-decoration:none;}
+@media(hover:hover) {.particle-step:hover strong {color:var(--accent);} .particle-caption a:hover {text-decoration:underline; text-underline-offset:4px;}}
+@media(max-width:720px) {
+  .particle-section {margin-top:45px; --particle-height:880px;}
+  .particle-stage {padding-top:78px; padding-bottom:20px;}
+  .particle-heading h2 {font-size:32px; max-width:320px;}
+  .particle-body {grid-template-columns:1fr; grid-template-rows:minmax(80px,1fr) auto; gap:14px; margin-top:15px;}
+  .particle-steps {padding-left:16px;}
+  .particle-step {padding:13px 0; gap:9px; grid-template-columns:21px 1fr;}
+  .particle-step strong {font-size:18px;}
+  .has-particles .particle-step:not(.is-active) .particle-step-copy {display:none;}
+  .particle-step-copy {font-size:12px; line-height:1.5; margin-top:6px;}
+  .particle-caption {padding-top:15px; margin-top:17px; gap:12px;}
+  .particle-state {font-size:9px; max-width:125px;}
+  .particle-caption a {font-size:12px; gap:6px;}
+}
+
+@media(max-width:720px) and (max-height:600px) {
+  .particle-stage {padding-top:65px; padding-bottom:14px;}
+  .particle-heading h2 {font-size:27px; margin-top:10px;}
+  .particle-body {margin-top:10px; gap:10px; grid-template-rows:minmax(60px,1fr) auto;}
+  .particle-step {padding:10px 0;}
+  .particle-step strong {font-size:16px;}
+  .particle-step-copy {font-size:11px; margin-top:4px;}
+  .particle-caption {padding-top:10px; margin-top:10px;}
+}

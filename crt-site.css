@@ -1,0 +1,159 @@
+/* The cabinet is outside the signal pipeline: no grain, displacement or interference. */
+html.crt-site,html.crt-site body {
+  height:100%;
+  overflow:hidden;
+  background:#080808;
+}
+
+.crt-shell {
+  position:fixed;
+  inset:0;
+  z-index:0;
+  isolation:isolate;
+  background:#080808;
+}
+
+.crt-display {
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  mask-image:url('./assets/crt-screen-mask.png');
+  mask-size:100% 100%;
+  mask-repeat:no-repeat;
+  -webkit-mask-image:url('./assets/crt-screen-mask.png');
+  -webkit-mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat;
+}
+
+.crt-signal {
+  position:absolute;
+  inset:0;
+  background:var(--bg,var(--case-bg,#101010));
+}
+
+.crt-signal.has-curve {
+  -webkit-filter:url('#crtSiteCurve');
+  filter:url('#crtSiteCurve');
+}
+
+.crt-scroll {
+  position:absolute;
+  inset:0;
+  overflow:auto;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  scroll-padding-top:clamp(100px,13vh,140px);
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  background:var(--bg,var(--case-bg,#101010));
+}
+
+.crt-scroll::-webkit-scrollbar {
+  display:none;
+}
+
+.crt-frame {
+  position:absolute;
+  inset:0;
+  z-index:1000;
+  width:100%;
+  height:100%;
+  object-fit:fill;
+  pointer-events:none;
+  user-select:none;
+}
+
+.crt-glass {
+  position:absolute;
+  inset:0;
+  z-index:802;
+  pointer-events:none;
+  background:radial-gradient(ellipse at 50% 48%,transparent 52%,#0001 76%,#0008 100%),linear-gradient(125deg,#ffffff03,transparent 25%,transparent 80%,#ffffff02);
+}
+
+/* PX PUSH-style scan raster. Both motions use compositor transforms.
+   Keep this outside .crt-signal to avoid invalidating the page displacement filter. */
+.crt-raster {
+  --raster-pitch:.4vw;
+  --raster-half-pitch:.2vw;
+  --screen-half-height:50vh;
+  --beam-start:110vh;
+  --beam-end:-200vh;
+  position:absolute;
+  inset:0;
+  z-index:801;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:.25;
+  contain:strict;
+  mask-image:linear-gradient(to bottom,#000 0%,#000 10%,#0004 25%,#0000000a 38%,#0000000a 62%,#0004 75%,#000 90%,#000 100%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 10%,#0004 25%,#0000000a 38%,#0000000a 62%,#0004 75%,#000 90%,#000 100%);
+}
+
+.crt-raster::before,.crt-raster::after {
+  content:"";
+  position:absolute;
+  left:0;
+  width:100%;
+  pointer-events:none;
+  will-change:transform;
+}
+
+.crt-raster::before {
+  top:0;
+  height:clamp(2px,.1vw,3px);
+  background:rgb(0 0 0 / .7);
+  opacity:.8;
+  animation:crt-scan-beam 8s linear infinite;
+}
+
+.crt-raster::after {
+  top:calc(0px - var(--screen-half-height));
+  bottom:0;
+  background:linear-gradient(transparent 50%,rgb(0 0 0 / .3) 51%);
+  background-size:100% var(--raster-pitch);
+  animation:crt-scan-raster 1s steps(60) infinite;
+}
+
+@keyframes crt-scan-beam {
+  from {transform:translate3d(0,var(--beam-start),0);}
+  to {transform:translate3d(0,var(--beam-end),0);}
+}
+
+@keyframes crt-scan-raster {
+  from {transform:translate3d(0,0,0);}
+  to {transform:translate3d(0,calc(var(--screen-half-height) - var(--raster-half-pitch)),0);}
+}
+
+.crt-raster.is-paused::before,.crt-raster.is-paused::after {
+  animation-play-state:paused;
+}
+
+@media(max-width:600px) {
+  .crt-raster {
+    --raster-pitch:.4vh;
+    --raster-half-pitch:.2vh;
+  }
+  .crt-raster::before {opacity:.5;}
+}
+
+.crt-defs {
+  position:absolute;
+  top:0;
+  left:0;
+  width:1px;
+  height:1px;
+  overflow:visible;
+  pointer-events:none;
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .crt-scroll {
+    scroll-behavior:auto;
+  }
+  .crt-raster::before {display:none;}
+  .crt-raster::after {animation:none;will-change:auto;}
+
+}
+
